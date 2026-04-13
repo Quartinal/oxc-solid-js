@@ -30,6 +30,15 @@
   ],
   "author": "SolidJS Contributors",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/taskylizard/oxc-solid-js.git",
+    "directory": "packages/vite"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "dependencies": {
     "solid-refresh": "^0.7.0"
   },

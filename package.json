@@ -17,11 +17,9 @@
   },
   "files": [
     "index.d.ts",
-    "index.js",
-    "browser.js"
+    "index.js"
   ],
   "main": "index.js",
-  "browser": "browser.js",
   "types": "index.d.ts",
   "publishConfig": {
     "access": "public",
@@ -72,5 +70,11 @@
   "engines": {
     "node": ">= 6.14.2 < 7 || >= 8.11.2 < 9 || >= 9.11.0 < 10 || >= 10.0.0"
   },
-  "packageManager": "pnpm@10.32.1"
+  "packageManager": "pnpm@10.32.1",
+  "optionalDependencies": {
+    "@oxc-solid-js/compiler-darwin-x64": "1.1.1",
+    "@oxc-solid-js/compiler-darwin-arm64": "1.1.1",
+    "@oxc-solid-js/compiler-linux-x64-gnu": "1.1.1",
+    "@oxc-solid-js/compiler-win32-x64-msvc": "1.1.1"
+  }
 }

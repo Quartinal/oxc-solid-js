@@ -1,0 +1,17 @@
+[package]
+name = "common"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+oxc_ast = { workspace = true }
+oxc_span = { workspace = true }
+oxc_allocator = { workspace = true }
+oxc_codegen = { workspace = true }
+oxc_syntax = { workspace = true }
+oxc_semantic = { workspace = true }
+oxc_traverse = { workspace = true }
+
+phf = { workspace = true, features = ["macros"] }
+indexmap = { workspace = true }
+rustc-hash = { workspace = true }

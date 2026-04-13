@@ -1,0 +1,12 @@
+{
+  "name": "@oxc-solid-js/compiler-benchmark",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@babel/core": "^7.26.0",
+    "@babel/preset-typescript": "^7.26.0",
+    "babel-preset-solid": "^1.6.16",
+    "@oxc-solid-js/compiler": "workspace:*",
+    "tinybench": "^6.0.0"
+  }
+}

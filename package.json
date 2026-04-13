@@ -1,0 +1,76 @@
+{
+  "name": "@oxc-solid-js/compiler",
+  "version": "1.1.1",
+  "description": "Port of babel-jsx-dom-expressions to oxc",
+  "keywords": [
+    "N-API",
+    "NAPI",
+    "Rust",
+    "napi-rs",
+    "node-addon",
+    "node-addon-api"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/taskylizard/oxc-solid-js.git"
+  },
+  "files": [
+    "index.d.ts",
+    "index.js",
+    "browser.js"
+  ],
+  "main": "index.js",
+  "browser": "browser.js",
+  "types": "index.d.ts",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "artifacts": "napi artifacts",
+    "bench": "node --import @oxc-node/core/register benchmark/bench.ts",
+    "build": "napi build --platform --release --features napi --no-js --dts index.d.ts",
+    "build:debug": "napi build --platform",
+    "format": "run-p format:js format:rs",
+    "format:js": "oxfmt .",
+    "format:rs": "cargo fmt",
+    "prepublishOnly": "napi prepublish -t npm",
+    "version": "napi version"
+  },
+  "devDependencies": {
+    "@emnapi/core": "^1.5.0",
+    "@emnapi/runtime": "^1.5.0",
+    "@napi-rs/cli": "^3.2.0",
+    "@napi-rs/wasm-runtime": "^1.0.4",
+    "@oxc-node/core": "^0.0.35",
+    "@tybys/wasm-util": "^0.10.0",
+    "chalk": "^5.6.2",
+    "emnapi": "^1.5.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
+    "npm-run-all2": "^8.0.4",
+    "oxfmt": "^0.42.0",
+    "tinybench": "^6.0.0",
+    "typescript": "^5.9.2"
+  },
+  "lint-staged": {
+    "*.@(js|ts|tsx|yml|yaml|md|json)": [
+      "oxfmt"
+    ]
+  },
+  "napi": {
+    "constEnum": true,
+    "binaryName": "oxc-solid-js-compiler",
+    "targets": [
+      "x86_64-apple-darwin",
+      "aarch64-apple-darwin",
+      "x86_64-unknown-linux-gnu",
+      "x86_64-pc-windows-msvc"
+    ]
+  },
+  "engines": {
+    "node": ">= 6.14.2 < 7 || >= 8.11.2 < 9 || >= 9.11.0 < 10 || >= 10.0.0"
+  },
+  "packageManager": "pnpm@10.32.1"
+}

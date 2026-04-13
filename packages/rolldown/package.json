@@ -1,0 +1,47 @@
+{
+  "name": "@oxc-solid-js/rolldown",
+  "version": "0.1.0-alpha.15",
+  "description": "Rolldown plugin using OXC-based jsx-dom-expressions compiler",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json -w"
+  },
+  "keywords": [
+    "rolldown",
+    "rollup",
+    "plugin",
+    "solid",
+    "solidjs",
+    "jsx",
+    "oxc"
+  ],
+  "author": "SolidJS Contributors",
+  "license": "MIT",
+  "peerDependencies": {
+    "rolldown": ">=0.1.0",
+    "@oxc-solid-js/compiler": "workspace:*"
+  },
+  "peerDependenciesMeta": {
+    "rolldown": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@oxc-solid-js/compiler": "workspace:*",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

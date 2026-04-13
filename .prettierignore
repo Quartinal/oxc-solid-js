@@ -1,0 +1,10 @@
+target
+.yarn
+/*.js
+/*.mjs
+/*.cjs
+/index.js
+index.d.ts
+pnpm-lock.yaml
+**/node_modules
+dom-expressions

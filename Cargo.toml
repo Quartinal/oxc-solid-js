@@ -1,0 +1,84 @@
+[package]
+name = "oxc-solid-js-compiler"
+version = "0.1.0"
+edition = "2021"
+authors = ["taskylizard"]
+description = "OXC-based JSX DOM Expressions"
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[features]
+default = []
+napi = ["dep:napi", "dep:napi-derive"]
+
+[workspace]
+resolver = "2"
+members = ["crates/*"]
+
+[workspace.dependencies]
+napi = { version = "3.8.2", features = ["napi9"] }
+napi-derive = "3.5.1"
+
+oxc_parser = "0.113.0"
+oxc_ast = "0.113.0"
+oxc_allocator = "0.113.0"
+oxc_span = "0.113.0"
+oxc_ast_visit = "0.113.0"
+oxc_traverse = "0.113.0"
+oxc_semantic = "0.113.0"
+oxc_codegen = "0.113.0"
+oxc_syntax = "0.113.0"
+
+phf = "0.13.1"
+indexmap = "2.12.0"
+rustc-hash = "2.0"
+html5ever = "0.27.0"
+markup5ever = "0.12.1"
+markup5ever_rcdom = "0.3.0"
+regex = "1.11.1"
+
+common = { path = "crates/common" }
+dom = { path = "crates/dom" }
+ssr = { path = "crates/ssr" }
+solid-linter = { path = "crates/linter" }
+solid-refresh = { path = "crates/solid-refresh" }
+
+xxhash-rust = { version = "0.8", features = ["xxh32"] }
+
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[dependencies]
+napi = { workspace = true, optional = true }
+napi-derive = { workspace = true, optional = true }
+
+oxc_parser = { workspace = true }
+oxc_ast = { workspace = true }
+oxc_allocator = { workspace = true }
+oxc_span = { workspace = true }
+oxc_traverse = { workspace = true }
+oxc_semantic = { workspace = true }
+oxc_codegen = { workspace = true }
+
+common = { workspace = true }
+dom = { workspace = true }
+ssr = { workspace = true }
+solid-refresh = { workspace = true }
+
+[dev-dependencies]
+insta = "1.43.2"
+rustc-hash = { workspace = true }
+
+[build-dependencies]
+napi-build = "2.3.1"
+
+[[bench]]
+name = "transform_bench"
+harness = false
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = "symbols"

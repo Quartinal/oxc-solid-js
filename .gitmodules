@@ -1,0 +1,12 @@
+[submodule "dom-expressions"]
+	path = submodules/dom-expressions
+	url = https://github.com/ryansolid/dom-expressions
+[submodule "oxc"]
+	path = submodules/oxc
+	url = https://github.com/oxc-project/oxc.git
+[submodule "solid-refresh"]
+	path = submodules/solid-refresh
+	url = https://github.com/solidjs/solid-refresh.git
+[submodule "vite-plugin-solid"]
+	path = submodules/vite-plugin-solid
+	url = https://github.com/solidjs/vite-plugin-solid

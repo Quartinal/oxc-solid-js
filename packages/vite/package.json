@@ -1,0 +1,45 @@
+{
+  "name": "@oxc-solid-js/vite",
+  "version": "0.1.0-alpha.15",
+  "description": "Vite plugin for @oxc-solid-js/compiler",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json -w"
+  },
+  "keywords": [
+    "vite",
+    "vite-plugin",
+    "solid",
+    "solidjs",
+    "jsx",
+    "oxc",
+    "rolldown"
+  ],
+  "author": "SolidJS Contributors",
+  "license": "MIT",
+  "dependencies": {
+    "solid-refresh": "^0.7.0"
+  },
+  "peerDependencies": {
+    "@oxc-solid-js/compiler": "workspace:*",
+    "vite": "^5.0.0 || ^6.0.0 || ^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vite": "^6.0.0"
+  }
+}

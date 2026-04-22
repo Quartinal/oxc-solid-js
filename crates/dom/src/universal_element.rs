@@ -126,8 +126,8 @@ fn template_literal_expr_from_raw<'a>(
     let raw = ast.allocator.alloc_str(&escaped_raw);
     let cooked = ast.allocator.alloc_str(raw_value);
     let value = TemplateElementValue {
-        raw: ast.atom(raw),
-        cooked: Some(ast.atom(cooked)),
+        raw: ast.str(raw),
+        cooked: Some(ast.str(cooked)),
     };
     let quasis = ast.vec1(ast.template_element(span, value, true, false));
     let template = ast.template_literal(span, quasis, ast.vec());

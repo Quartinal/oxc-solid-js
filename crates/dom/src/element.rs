@@ -201,8 +201,8 @@ fn template_literal_expr_from_raw<'a>(
     let _ = span;
     let raw = ast.allocator.alloc_str(raw_value);
     let value = TemplateElementValue {
-        raw: ast.atom(raw),
-        cooked: Some(ast.atom(raw)),
+        raw: ast.str(raw),
+        cooked: Some(ast.str(raw)),
     };
     let quasis = ast.vec1(ast.template_element(SPAN, value, true, true));
     let template = ast.template_literal(SPAN, quasis, ast.vec());
@@ -1335,8 +1335,8 @@ fn build_merged_class_value<'a>(
         let is_tail = index + 1 == quasis_len;
         let raw_str = ast.allocator.alloc_str(&raw);
         let value = TemplateElementValue {
-            raw: ast.atom(raw_str),
-            cooked: Some(ast.atom(raw_str)),
+            raw: ast.str(raw_str),
+            cooked: Some(ast.str(raw_str)),
         };
         quasis.push(ast.template_element(SPAN, value, is_tail, true));
     }

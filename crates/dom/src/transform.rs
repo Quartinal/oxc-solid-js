@@ -1262,8 +1262,8 @@ impl<'a> Traverse<'a, ()> for SolidTransform<'a> {
                 let raw_template = escape_string_for_template(&tmpl.content);
                 let raw_str = ast.allocator.alloc_str(&raw_template);
                 let value = TemplateElementValue {
-                    raw: ast.atom(raw_str),
-                    cooked: Some(ast.atom(cooked_str)),
+                    raw: ast.str(raw_str),
+                    cooked: Some(ast.str(cooked_str)),
                 };
                 quasis.push(ast.template_element(tmpl_span, value, true, false));
                 let template_lit = ast.template_literal(tmpl_span, quasis, ast.vec());

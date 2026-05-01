@@ -4,25 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2f8bb672-4317-401c-9e81-a59abe9b07e4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.agents/skills/migrate-to-solid-2/SKILL.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/CI.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/CI.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crates/common/src/constants.rs" beforeDir="false" afterPath="$PROJECT_DIR$/crates/common/src/constants.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crates/common/src/options.rs" beforeDir="false" afterPath="$PROJECT_DIR$/crates/common/src/options.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crates/linter/src/rules/imports.rs" beforeDir="false" afterPath="$PROJECT_DIR$/crates/linter/src/rules/imports.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crates/linter/src/semantic_visitor.rs" beforeDir="false" afterPath="$PROJECT_DIR$/crates/linter/src/semantic_visitor.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crates/solid-refresh/src/constants.rs" beforeDir="false" afterPath="$PROJECT_DIR$/crates/solid-refresh/src/constants.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/examples/vite/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/examples/vite/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.d.ts" beforeDir="false" afterPath="$PROJECT_DIR$/index.d.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/rolldown/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/rolldown/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/packages/vite/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/vite/src/index.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pnpm-workspace.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/pnpm-workspace.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/lib.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/lib.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/solid_refresh_tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/solid_refresh_tests.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/transform_tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/tests/transform_tests.rs" afterDir="false" />
-    </list>
+    <list default="true" id="2f8bb672-4317-401c-9e81-a59abe9b07e4" name="Changes" comment="Fixes" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -35,6 +17,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Quartinal/oxc-solid-js",
+    "accountId": "66e782cd-eb3e-4f50-8439-67c654708a1c"
+  }
+}]]></component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -92,11 +80,24 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1777669660998</updated>
-      <workItem from="1777669662108" duration="3072000" />
+      <workItem from="1777669662108" duration="3458000" />
     </task>
+    <task id="LOCAL-00001" summary="Fixes">
+      <option name="closed" value="true" />
+      <created>1777672886290</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1777672886291</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Fixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixes" />
   </component>
 </project>

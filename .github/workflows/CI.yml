@@ -125,6 +125,7 @@ jobs:
           node_file="$(ls *.node | head -n 1)"
           mkdir -p dist
           tar -czf "dist/oxc-solid-js-compiler-${{ matrix.settings.target }}.tar.gz" "$node_file"
+        shell: bash
       - name: Upload release tarball
         uses: actions/upload-artifact@v7
         if: matrix.settings.target != 'wasm32-wasip1-threads'

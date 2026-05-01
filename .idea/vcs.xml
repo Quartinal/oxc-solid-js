@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/submodules/dom-expressions" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/submodules/oxc" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/submodules/solid-refresh" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/submodules/vite-plugin-solid" vcs="Git" />
+  </component>
+</project>

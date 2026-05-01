@@ -124,7 +124,71 @@ jobs:
           set -euo pipefail
           node_file="$(ls *.node | head -n 1)"
           mkdir -p dist
-          tar -czf "dist/oxc-solid-js-compiler-${{ matrix.settings.target }}.tar.gz" "$node_file"
+          target="${{ matrix.settings.target }}"
+          version="$(node -p "require('./package.json').version")"
+
+          os=""
+          cpu=""
+          libc=""
+          case "$target" in
+            x86_64-unknown-linux-gnu)
+              os="linux"
+              cpu="x64"
+              libc="glibc"
+              ;;
+            x86_64-pc-windows-msvc)
+              os="win32"
+              cpu="x64"
+              ;;
+            x86_64-apple-darwin)
+              os="darwin"
+              cpu="x64"
+              ;;
+            aarch64-apple-darwin)
+              os="darwin"
+              cpu="arm64"
+              ;;
+            *)
+              echo "Unsupported target for release tarball metadata: $target" >&2
+              exit 1
+              ;;
+          esac
+
+          package_dir="dist/target-package"
+          mkdir -p "$package_dir"
+
+          cp "$node_file" "$package_dir/"
+
+          if [ -n "$libc" ]; then
+            node -e "
+              const fs = require('fs');
+              const pkg = {
+                name: '@oxc-solid-js/compiler-${target}',
+                version: '${version}',
+                main: '${node_file}',
+                os: ['${os}'],
+                cpu: ['${cpu}'],
+                libc: ['${libc}'],
+                files: ['${node_file}'],
+              };
+              fs.writeFileSync('${package_dir}/package.json', JSON.stringify(pkg, null, 2) + '\\n');
+            "
+          else
+            node -e "
+              const fs = require('fs');
+              const pkg = {
+                name: '@oxc-solid-js/compiler-${target}',
+                version: '${version}',
+                main: '${node_file}',
+                os: ['${os}'],
+                cpu: ['${cpu}'],
+                files: ['${node_file}'],
+              };
+              fs.writeFileSync('${package_dir}/package.json', JSON.stringify(pkg, null, 2) + '\\n');
+            "
+          fi
+
+          tar -czf "dist/oxc-solid-js-compiler-${target}.tar.gz" -C "$package_dir" "$node_file" package.json
         shell: bash
       - name: Upload release tarball
         uses: actions/upload-artifact@v7
@@ -292,6 +356,37 @@ jobs:
           path: release-assets
       - name: Build workspace packages
         run: pnpm --filter "@oxc-solid-js/vite" --filter "@oxc-solid-js/rolldown" build
+      - name: Pack compiler meta tarball
+        run: |
+          set -euo pipefail
+          mkdir -p release-assets release-assets/compiler-meta
+          version="$(node -p "require('./package.json').version")"
+          repo="${{ github.repository }}"
+          base_url="https://github.com/${repo}/releases/download/v${version}"
+
+          node -e "
+            const fs = require('fs');
+            const root = JSON.parse(fs.readFileSync('./package.json', 'utf8'));
+            const version = '${version}';
+            const baseUrl = '${base_url}';
+            const pkg = {
+              ...root,
+              optionalDependencies: {
+                '@oxc-solid-js/compiler-darwin-x64': baseUrl + '/oxc-solid-js-compiler-x86_64-apple-darwin.tar.gz',
+                '@oxc-solid-js/compiler-darwin-arm64': baseUrl + '/oxc-solid-js-compiler-aarch64-apple-darwin.tar.gz',
+                '@oxc-solid-js/compiler-linux-x64-gnu': baseUrl + '/oxc-solid-js-compiler-x86_64-unknown-linux-gnu.tar.gz',
+                '@oxc-solid-js/compiler-win32-x64-msvc': baseUrl + '/oxc-solid-js-compiler-x86_64-pc-windows-msvc.tar.gz'
+              },
+            };
+            delete pkg.devDependencies;
+            delete pkg.scripts;
+            delete pkg.napi;
+            pkg.version = version;
+            fs.writeFileSync('release-assets/compiler-meta/package.json', JSON.stringify(pkg, null, 2) + '\\n');
+          "
+
+          cp index.js index.d.ts release-assets/compiler-meta/
+          tar -czf release-assets/oxc-solid-js-compiler.tgz -C release-assets/compiler-meta package.json index.js index.d.ts
       - name: Pack Vite plugin tarball
         run: |
           set -euo pipefail
@@ -316,6 +411,8 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: release-assets/*.tar.gz
+          files: |
+            release-assets/*.tar.gz
+            release-assets/*.tgz
           generate_release_notes: true
           prerelease: ${{ contains(github.ref_name, '-') }}

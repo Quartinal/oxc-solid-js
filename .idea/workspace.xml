@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2f8bb672-4317-401c-9e81-a59abe9b07e4" name="Changes" comment="why webstorm not push???">
+    <list default="true" id="2f8bb672-4317-401c-9e81-a59abe9b07e4" name="Changes" comment="Fix two failing CI actions">
       <change beforePath="$PROJECT_DIR$/.github/workflows/CI.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/CI.yml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/crates/common/src/options.rs" beforeDir="false" afterPath="$PROJECT_DIR$/crates/common/src/options.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,7 +14,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="9074" />
+    <option name="cachedIndexableFilesCount" value="11076" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -36,6 +35,9 @@
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
+  </component>
+  <component name="PackageJsonUpdateNotifier">
+    <dismissed value="$PROJECT_DIR$/submodules/oxc/crates/oxc_linter/fixtures/import/package.json" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 8,
@@ -59,7 +61,7 @@
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;javascript.preferred.runtime.type.id&quot;: &quot;node&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/quartinal/oxc-solid-js&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/quartinal/Civil-clone&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -90,7 +92,8 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1777669660998</updated>
-      <workItem from="1777669662108" duration="4100000" />
+      <workItem from="1777669662108" duration="5667000" />
+      <workItem from="1777676163116" duration="315000" />
     </task>
     <task id="LOCAL-00001" summary="Fixes">
       <option name="closed" value="true" />
@@ -108,7 +111,15 @@
       <option name="project" value="LOCAL" />
       <updated>1777673189871</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Fix two failing CI actions">
+      <option name="closed" value="true" />
+      <created>1777673835760</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1777673835760</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -117,6 +128,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Fixes" />
     <MESSAGE value="why webstorm not push???" />
-    <option name="LAST_COMMIT_MESSAGE" value="why webstorm not push???" />
+    <MESSAGE value="Fix two failing CI actions" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix two failing CI actions" />
   </component>
 </project>

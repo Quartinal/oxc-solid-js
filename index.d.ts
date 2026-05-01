@@ -10,7 +10,7 @@ export interface JsRendererConfig {
 export interface JsTransformOptions {
   /**
    * The module to import runtime helpers from
-   * @default "solid-js/web"
+   * @default "@solidjs/web"
    */
   moduleName?: string
   /** Multi-renderer configuration used by `generate: "dynamic"` */

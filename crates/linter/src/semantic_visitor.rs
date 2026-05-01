@@ -20,7 +20,7 @@ use crate::utils::is_dom_element;
 use crate::RuleMeta;
 
 /// Solid.js module sources
-const SOLID_SOURCES: &[&str] = &["solid-js", "solid-js/store", "solid-js/web"];
+const SOLID_SOURCES: &[&str] = &["solid-js", "@solidjs/web", "solid-js/web", "solid-js/store"];
 
 /// Configuration for semantic-aware rules
 #[derive(Debug, Clone, Default)]

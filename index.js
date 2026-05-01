@@ -6,6 +6,9 @@
 
 const { platform, arch } = require('node:process');
 const { join } = require('node:path');
+const { existsSync, mkdirSync } = require('node:fs');
+const { tmpdir } = require('node:os');
+const { execFileSync } = require('node:child_process');
 
 let nativeBinding = null;
 
@@ -31,6 +34,41 @@ const platformMap = {
 
 const platformKey = `${platform}-${arch}`;
 const nativeTarget = platformMap[platformKey];
+const packageVersion = require('./package.json').version;
+
+function downloadNativeBindingTarball(target) {
+  if (!target) return null;
+
+  const nodeFileName = `oxc-solid-js-compiler.${target}.node`;
+  const cacheDir = join(__dirname, '.native');
+  const cachedNodePath = join(cacheDir, nodeFileName);
+
+  if (existsSync(cachedNodePath)) {
+    return cachedNodePath;
+  }
+
+  mkdirSync(cacheDir, { recursive: true });
+
+  const archiveName = `oxc-solid-js-compiler-${target}.tar.gz`;
+  const releaseTags = [`v${packageVersion}`, packageVersion];
+  const archivePath = join(tmpdir(), `${archiveName}.${process.pid}`);
+
+  for (const tag of releaseTags) {
+    const url = `https://github.com/taskylizard/oxc-solid-js/releases/download/${tag}/${archiveName}`;
+    try {
+      execFileSync('curl', ['-fsSL', url, '-o', archivePath], { stdio: 'ignore' });
+      execFileSync('tar', ['-xzf', archivePath, '-C', cacheDir], { stdio: 'ignore' });
+
+      if (existsSync(cachedNodePath)) {
+        return cachedNodePath;
+      }
+    } catch {
+      // Continue to next tag candidate.
+    }
+  }
+
+  return null;
+}
 
 const optionalBinaryPackageMap = {
   'darwin-arm64': '@oxc-solid-js/compiler-darwin-arm64',
@@ -67,9 +105,20 @@ if (!nativeBinding) {
     }
   }
 
+  if (!nativeBinding && nativeTarget) {
+    const downloadedNodePath = downloadNativeBindingTarball(nativeTarget);
+    if (downloadedNodePath) {
+      try {
+        nativeBinding = require(downloadedNodePath);
+      } catch (e) {
+        loadErrors.push(e);
+      }
+    }
+  }
+
   if (!nativeBinding) {
     console.warn(
-      `@oxc-solid-js/compiler: Native module not found for ${platformKey}. Run \`npm run build\` to compile.`,
+      `@oxc-solid-js/compiler: Native module not found for ${platformKey}. Tried local binary, optional package, and GitHub Release tarball fallback.`,
     );
 
     for (const err of loadErrors) {
@@ -82,18 +131,17 @@ if (!nativeBinding) {
  * Default options matching babel-preset-solid
  */
 const defaultOptions = {
-  moduleName: 'solid-js/web',
+  moduleName: '@solidjs/web',
   builtIns: [
     'For',
     'Show',
     'Switch',
     'Match',
-    'Suspense',
-    'SuspenseList',
+    'Loading',
+    'Reveal',
     'Portal',
-    'Index',
     'Dynamic',
-    'ErrorBoundary',
+    'Errored',
   ],
   contextToCustomElements: true,
   wrapConditionals: true,

@@ -309,10 +309,9 @@ pub static BUILT_INS: Set<&'static str> = phf_set! {
     "Show",
     "Switch",
     "Match",
-    "Suspense",
-    "SuspenseList",
+    "Loading",
+    "Reveal",
     "Portal",
-    "Index",
     "Dynamic",
-    "ErrorBoundary",
+    "Errored",
 };

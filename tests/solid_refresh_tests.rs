@@ -256,7 +256,7 @@ fn refresh_reload() {
 #[test]
 fn fix_render() {
     let out = transform_hmr(
-        "import { render } from 'solid-js/web'; render(() => <App />, document.body);",
+        "import { render } from '@solidjs/web'; render(() => <App />, document.body);",
     );
     assert!(
         out.contains("dispose") || out.contains("_cleanup"),

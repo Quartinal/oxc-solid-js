@@ -59,7 +59,7 @@ import { transformJsx } from "@oxc-solid-js/compiler";
 
 const { code, map } = transformJsx(`<div class="hello">world</div>`, {
   generate: "dom",
-  moduleName: "solid-js/web",
+  moduleName: "@solidjs/web",
   sourceMap: true,
 });
 ```

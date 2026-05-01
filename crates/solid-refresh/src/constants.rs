@@ -33,14 +33,14 @@ pub const IMPORT_SPECIFIERS: &[ImportIdentifierSpecifier] = &[
         import_type: ImportIdentifierType::Render,
         definition: ImportDefinition::Named {
             name: "render",
-            source: "solid-js/web",
+            source: "@solidjs/web",
         },
     },
     ImportIdentifierSpecifier {
         import_type: ImportIdentifierType::Render,
         definition: ImportDefinition::Named {
             name: "hydrate",
-            source: "solid-js/web",
+            source: "@solidjs/web",
         },
     },
     ImportIdentifierSpecifier {
@@ -54,7 +54,7 @@ pub const IMPORT_SPECIFIERS: &[ImportIdentifierSpecifier] = &[
         import_type: ImportIdentifierType::CreateContext,
         definition: ImportDefinition::Named {
             name: "createContext",
-            source: "solid-js/web",
+            source: "@solidjs/web",
         },
     },
 ];

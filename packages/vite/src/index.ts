@@ -19,7 +19,7 @@ export interface SolidOxcOptions {
 
   /**
    * The module to import runtime helpers from
-   * @default 'solid-js/web'
+   * @default '@solidjs/web'
    */
   module_name?: string;
 
@@ -87,7 +87,7 @@ export interface SolidOxcOptions {
 const defaultOptions: SolidOxcOptions = {
   include: /\.[jt]sx$/,
   exclude: /node_modules/,
-  module_name: 'solid-js/web',
+  module_name: '@solidjs/web',
   generate: 'dom',
   hydratable: false,
   delegate_events: true,
@@ -98,12 +98,11 @@ const defaultOptions: SolidOxcOptions = {
     'Show',
     'Switch',
     'Match',
-    'Suspense',
-    'SuspenseList',
+    'Loading',
+    'Reveal',
     'Portal',
-    'Index',
     'Dynamic',
-    'ErrorBoundary',
+    'Errored',
   ],
 };
 
@@ -223,8 +222,8 @@ export default function solidOxc(options: SolidOxcOptions = {}): Plugin {
         oxcJsxDomExpr = await import('@oxc-solid-js/compiler');
       } catch (e) {
         this.error(
-          'Failed to load @oxc-solid-js/compiler. Make sure it is built for your platform.\n' +
-          'Run: npm run build'
+          'Failed to load @oxc-solid-js/compiler. Ensure the package is installed and a platform binary is available.\n' +
+          'The compiler loader can use GitHub Release OS tarballs automatically when published.'
         );
       }
     },
@@ -403,7 +402,7 @@ export default function solidOxc(options: SolidOxcOptions = {}): Plugin {
         },
         resolve: {
           ...(resolveConditions ? { conditions: resolveConditions } : {}),
-          dedupe: ['solid-js', 'solid-js/web'],
+          dedupe: ['solid-js', '@solidjs/web'],
           alias: willNeedHmr ? [{ find: /^solid-refresh$/, replacement: REFRESH_VIRTUAL_ID }] : [],
         },
       };

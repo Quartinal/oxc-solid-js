@@ -115,7 +115,7 @@ pub enum GenerateMode {
 impl<'a> TransformOptions<'a> {
     pub fn solid_defaults() -> Self {
         Self {
-            module_name: "solid-js/web",
+            module_name: "@solidjs/web",
             renderers: vec![],
             require_import_source: None,
             generate: GenerateMode::Dom,
@@ -133,12 +133,11 @@ impl<'a> TransformOptions<'a> {
                 "Show",
                 "Switch",
                 "Match",
-                "Suspense",
-                "SuspenseList",
+                "Loading",
+                "Reveal",
                 "Portal",
-                "Index",
                 "Dynamic",
-                "ErrorBoundary",
+                "Errored",
             ],
             effect_wrapper: "effect",
             memo_wrapper: "memo",

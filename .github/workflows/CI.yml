@@ -11,8 +11,9 @@ permissions:
   push:
     branches:
       - main
-    tags-ignore:
-      - "**"
+    tags:
+      - "v*"
+      - "v*-*"
     paths-ignore:
       - "**/*.md"
       - LICENSE
@@ -117,6 +118,20 @@ jobs:
       - name: Build
         run: ${{ matrix.settings.build }}
         shell: bash
+      - name: Pack release tarball
+        if: matrix.settings.target != 'wasm32-wasip1-threads'
+        run: |
+          set -euo pipefail
+          node_file="$(ls *.node | head -n 1)"
+          mkdir -p dist
+          tar -czf "dist/oxc-solid-js-compiler-${{ matrix.settings.target }}.tar.gz" "$node_file"
+      - name: Upload release tarball
+        uses: actions/upload-artifact@v7
+        if: matrix.settings.target != 'wasm32-wasip1-threads'
+        with:
+          name: release-tarball-${{ matrix.settings.target }}
+          path: dist/*.tar.gz
+          if-no-files-found: error
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         if: matrix.settings.target != 'wasm32-wasip1-threads'
@@ -258,35 +273,48 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install
-      - name: Download all artifacts
+      - name: Download binding artifacts
         uses: actions/download-artifact@v8
         with:
+          pattern: bindings-*
+          merge-multiple: true
           path: artifacts
       - name: create npm dirs
         run: pnpm napi create-npm-dirs
       - name: Move artifacts
         run: pnpm artifacts
+      - name: Download release tarballs
+        uses: actions/download-artifact@v8
+        with:
+          pattern: release-tarball-*
+          merge-multiple: true
+          path: release-assets
+      - name: Build workspace packages
+        run: pnpm --filter "@oxc-solid-js/vite" --filter "@oxc-solid-js/rolldown" build
+      - name: Pack Vite plugin tarball
+        run: |
+          set -euo pipefail
+          mkdir -p release-assets
+          vite_version="$(node -p "require('./packages/vite/package.json').version")"
+          pnpm --filter "@oxc-solid-js/vite" pack --pack-destination release-assets
+          mv "release-assets/oxc-solid-js-vite-${vite_version}.tgz" "release-assets/oxc-solid-js-vite-v${vite_version}.tar.gz"
+      - name: Pack Rolldown plugin tarball
+        run: |
+          set -euo pipefail
+          mkdir -p release-assets
+          rolldown_version="$(node -p "require('./packages/rolldown/package.json').version")"
+          pnpm --filter "@oxc-solid-js/rolldown" pack --pack-destination release-assets
+          mv "release-assets/oxc-solid-js-rolldown-${rolldown_version}.tgz" "release-assets/oxc-solid-js-rolldown-v${rolldown_version}.tar.gz"
       - name: List packages
         run: ls -R ./npm
         shell: bash
-      - name: Build workspace packages
-        run: pnpm --filter "@oxc-solid-js/vite" --filter "@oxc-solid-js/rolldown" build
-      - name: Publish
-        run: |
-          npm config set provenance true
-          if git log -1 --pretty=%B | grep "^v\?[0-9]\+\.[0-9]\+\.[0-9]\+$";
-          then
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-            npm publish --access public
-            pnpm --filter "@oxc-solid-js/vite" --filter "@oxc-solid-js/rolldown" publish --access public --no-git-checks
-          elif git log -1 --pretty=%B | grep "^v\?[0-9]\+\.[0-9]\+\.[0-9]\+";
-          then
-            echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-            npm publish --tag next --access public
-            pnpm --filter "@oxc-solid-js/vite" --filter "@oxc-solid-js/rolldown" publish --tag next --access public --no-git-checks
-          else
-            echo "Not a release, skipping publish"
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: List release assets
+        run: ls -R ./release-assets
+        shell: bash
+      - name: Upload release assets
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*.tar.gz
+          generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, '-') }}

@@ -1388,15 +1388,15 @@ fn test_dom_does_not_duplicate_existing_solid_web_imports() {
         "Output was:\n{code}"
     );
     assert!(
-        code.contains("import { createComponent as _$createComponent } from \"solid-js/web\";"),
+        code.contains("import { createComponent as _$createComponent } from \"@solidjs/web\";"),
         "Output was:\n{code}"
     );
     assert!(
-        code.contains("import { mergeProps as _$mergeProps } from \"solid-js/web\";"),
+        code.contains("import { mergeProps as _$mergeProps } from \"@solidjs/web\";"),
         "Output was:\n{code}"
     );
     assert_eq!(
-        code.matches("import { mergeProps as _$mergeProps } from \"solid-js/web\";")
+        code.matches("import { mergeProps as _$mergeProps } from \"@solidjs/web\";")
             .count(),
         1,
         "Output was:\n{code}"
@@ -1405,7 +1405,7 @@ fn test_dom_does_not_duplicate_existing_solid_web_imports() {
 
 #[test]
 fn test_dom_does_not_duplicate_mergeprops_from_solid_js() {
-    // mergeProps can be imported from "solid-js" (re-export) instead of "solid-js/web".
+    // mergeProps can be imported from "solid-js" (re-export) instead of "@solidjs/web".
     // Keep the existing import and add one aliased helper import for DOM helper usage.
     let code = transform_dom(
         r#"
@@ -1420,11 +1420,11 @@ fn test_dom_does_not_duplicate_mergeprops_from_solid_js() {
         "Should preserve the existing mergeProps import from solid-js. Output was:\n{code}"
     );
     assert!(
-        code.contains("import { mergeProps as _$mergeProps } from \"solid-js/web\";"),
-        "Should add aliased helper import from solid-js/web. Output was:\n{code}"
+        code.contains("import { mergeProps as _$mergeProps } from \"@solidjs/web\";"),
+        "Should add aliased helper import from @solidjs/web. Output was:\n{code}"
     );
     assert_eq!(
-        code.matches("import { mergeProps as _$mergeProps } from \"solid-js/web\";")
+        code.matches("import { mergeProps as _$mergeProps } from \"@solidjs/web\";")
             .count(),
         1,
         "Should not duplicate aliased mergeProps helper import. Output was:\n{code}"
@@ -1449,15 +1449,15 @@ fn test_dom_namespace_import_from_solid_web_adds_separate_helper_import() {
         "Output was:\n{code}"
     );
     assert!(
-        code.contains("import { template as _$template } from \"solid-js/web\";"),
+        code.contains("import { template as _$template } from \"@solidjs/web\";"),
         "Output was:\n{code}"
     );
     assert!(
-        code.contains("import { insert as _$insert } from \"solid-js/web\";"),
+        code.contains("import { insert as _$insert } from \"@solidjs/web\";"),
         "Output was:\n{code}"
     );
     assert_eq!(
-        code.matches("solid-js/web").count(),
+        code.matches("solid-js/web").count() + code.matches("@solidjs/web").count(),
         3,
         "Expected namespace import + one import per helper. Output was:\n{code}"
     );
@@ -2532,7 +2532,7 @@ fn test_dom_imports_template() {
     let code = transform_dom(r#"<div>hello</div>"#);
     assert!(code.contains("import"));
     assert!(code.contains("template"));
-    assert!(code.contains("solid-js/web"));
+    assert!(code.contains("@solidjs/web"));
 }
 
 #[test]
@@ -2575,11 +2575,11 @@ fn test_ssr_namespace_import_from_solid_web_adds_separate_helper_import() {
         "Should not merge named helpers into namespace import. Output was:\n{code}"
     );
     assert!(
-        code.matches("solid-js/web").count() >= 2,
+        code.matches("solid-js/web").count() + code.matches("@solidjs/web").count() >= 2,
         "Expected namespace import + separate helper imports. Output was:\n{code}"
     );
     assert!(
-        code.contains("import { ssr as _$ssr } from \"solid-js/web\""),
+        code.contains("import { ssr as _$ssr } from \"@solidjs/web\""),
         "Expected separate SSR helper import. Output was:\n{code}"
     );
 }
@@ -2599,11 +2599,11 @@ fn test_ssr_namespace_import_with_member_usage_keeps_separate_helper_import() {
         "Should not merge named helpers into namespace import. Output was:\n{code}"
     );
     assert!(
-        code.matches("solid-js/web").count() >= 2,
+        code.matches("solid-js/web").count() + code.matches("@solidjs/web").count() >= 2,
         "Expected namespace import + separate helper imports. Output was:\n{code}"
     );
     assert!(
-        code.contains("import { ssr as _$ssr } from \"solid-js/web\""),
+        code.contains("import { ssr as _$ssr } from \"@solidjs/web\""),
         "Expected separate SSR helper import. Output was:\n{code}"
     );
 }

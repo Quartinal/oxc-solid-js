@@ -2,3 +2,5 @@ packages:
   - "packages/*"
   - "examples/*"
   - "benchmark"
+allowBuilds:
+  esbuild: true

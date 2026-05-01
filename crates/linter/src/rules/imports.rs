@@ -1,6 +1,6 @@
 //! solid/imports
 //!
-//! Enforce consistent imports from "solid-js", "solid-js/web", and "solid-js/store".
+//! Enforce consistent imports from "solid-js" and "@solidjs/web".
 
 use oxc_ast::ast::ImportDeclaration;
 
@@ -17,7 +17,7 @@ impl RuleMeta for Imports {
 }
 
 /// Valid sources for Solid imports
-const SOLID_SOURCES: &[&str] = &["solid-js", "solid-js/web", "solid-js/store"];
+const SOLID_SOURCES: &[&str] = &["solid-js", "@solidjs/web", "solid-js/web", "solid-js/store"];
 
 /// Primitives that should be imported from "solid-js"
 const SOLID_JS_PRIMITIVES: &[&str] = &[
@@ -56,13 +56,18 @@ const SOLID_JS_PRIMITIVES: &[&str] = &[
     "Show",
     "Switch",
     "Match",
-    "Index",
-    "ErrorBoundary",
-    "Suspense",
-    "SuspenseList",
+    "createStore",
+    "produce",
+    "reconcile",
+    "unwrap",
+    "createMutable",
+    "modifyMutable",
+    "Loading",
+    "Reveal",
+    "Errored",
 ];
 
-/// Primitives that should be imported from "solid-js/web"
+/// Primitives that should be imported from "@solidjs/web"
 const SOLID_WEB_PRIMITIVES: &[&str] = &[
     "Portal",
     "render",
@@ -76,15 +81,7 @@ const SOLID_WEB_PRIMITIVES: &[&str] = &[
     "Dynamic",
 ];
 
-/// Primitives that should be imported from "solid-js/store"
-const SOLID_STORE_PRIMITIVES: &[&str] = &[
-    "createStore",
-    "produce",
-    "reconcile",
-    "unwrap",
-    "createMutable",
-    "modifyMutable",
-];
+const SOLID_STORE_PRIMITIVES: &[&str] = &[];
 
 /// Types that should be imported from "solid-js"
 const SOLID_JS_TYPES: &[&str] = &[

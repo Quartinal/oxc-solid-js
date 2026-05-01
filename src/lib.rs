@@ -44,7 +44,7 @@ pub struct JsRendererConfig {
 #[derive(Default)]
 pub struct JsTransformOptions {
     /// The module to import runtime helpers from
-    /// @default "solid-js/web"
+    /// @default "@solidjs/web"
     pub module_name: Option<String>,
 
     /// Multi-renderer configuration used by `generate: "dynamic"`

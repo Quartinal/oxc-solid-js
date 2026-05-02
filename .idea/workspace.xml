@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2f8bb672-4317-401c-9e81-a59abe9b07e4" name="Changes" comment="Fix two failing CI actions">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/CI.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/CI.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/npm/darwin-arm64/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/npm/darwin-arm64/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/npm/darwin-x64/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/npm/darwin-x64/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/npm/linux-x64-gnu/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/npm/linux-x64-gnu/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/npm/win32-x64-msvc/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/npm/win32-x64-msvc/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

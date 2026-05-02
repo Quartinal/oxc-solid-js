@@ -34,7 +34,50 @@ const platformMap = {
 
 const platformKey = `${platform}-${arch}`;
 const nativeTarget = platformMap[platformKey];
-const packageVersion = require('./package.json').version;
+const packageJson = require('./package.json');
+const packageVersion = packageJson.version;
+
+function deriveGithubRepoBaseFromUrl(url) {
+  if (typeof url !== 'string' || !url) return null;
+
+  const sshMatch = url.match(/github\.com[:/]([^/]+)\/([^/.]+)(?:\.git)?/);
+  if (sshMatch) {
+    return `https://github.com/${sshMatch[1]}/${sshMatch[2]}`;
+  }
+
+  const httpsMatch = url.match(/https?:\/\/github\.com\/([^/]+)\/([^/.]+)(?:\.git)?/);
+  if (httpsMatch) {
+    return `https://github.com/${httpsMatch[1]}/${httpsMatch[2]}`;
+  }
+
+  return null;
+}
+
+function resolveReleaseBaseUrl() {
+  const optionalDependencies = packageJson.optionalDependencies;
+  if (optionalDependencies && typeof optionalDependencies === 'object') {
+    for (const depSpecifier of Object.values(optionalDependencies)) {
+      if (typeof depSpecifier !== 'string') continue;
+      const match = depSpecifier.match(/^(https?:\/\/github\.com\/[^/]+\/[^/]+)\/releases\/download\//);
+      if (match) {
+        return match[1];
+      }
+    }
+  }
+
+  const repositoryUrl =
+    packageJson.repository && typeof packageJson.repository === 'object'
+      ? packageJson.repository.url
+      : packageJson.repository;
+  const repositoryBase = deriveGithubRepoBaseFromUrl(repositoryUrl);
+  if (repositoryBase) {
+    return repositoryBase;
+  }
+
+  return 'https://github.com/taskylizard/oxc-solid-js';
+}
+
+const releaseBaseUrl = resolveReleaseBaseUrl();
 
 function downloadNativeBindingTarball(target) {
   if (!target) return null;
@@ -54,7 +97,7 @@ function downloadNativeBindingTarball(target) {
   const archivePath = join(tmpdir(), `${archiveName}.${process.pid}`);
 
   for (const tag of releaseTags) {
-    const url = `https://github.com/taskylizard/oxc-solid-js/releases/download/${tag}/${archiveName}`;
+    const url = `${releaseBaseUrl}/releases/download/${tag}/${archiveName}`;
     try {
       execFileSync('curl', ['-fsSL', url, '-o', archivePath], { stdio: 'ignore' });
       execFileSync('tar', ['-xzf', archivePath, '-C', cacheDir], { stdio: 'ignore' });

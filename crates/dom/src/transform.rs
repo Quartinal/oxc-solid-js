@@ -58,6 +58,22 @@ fn memo_wrapper_enabled(options: &TransformOptions<'_>) -> bool {
     !options.memo_wrapper.is_empty()
 }
 
+fn base_runtime_module_name(module_name: &str) -> &str {
+    if module_name == "@solidjs/web" {
+        "solid-js"
+    } else {
+        module_name.strip_suffix("/web").unwrap_or(module_name)
+    }
+}
+
+fn helper_runtime_module_name<'a>(module_name: &'a str, helper: &str) -> &'a str {
+    if helper == "use" {
+        base_runtime_module_name(module_name)
+    } else {
+        module_name
+    }
+}
+
 fn jsx_element_name_is_component(name: &JSXElementName<'_>) -> bool {
     match name {
         JSXElementName::Identifier(id) => is_component(id.name.as_str()),
@@ -154,6 +170,7 @@ impl<'a> SolidTransform<'a> {
         } else {
             options.module_name
         };
+        let base_module_name = base_runtime_module_name(dom_module_name);
 
         Self {
             allocator,
@@ -163,7 +180,7 @@ impl<'a> SolidTransform<'a> {
                 options.hydratable,
                 source_text,
                 !options.effect_wrapper.is_empty(),
-                options.module_name,
+                base_module_name,
                 dom_module_name,
                 options.module_name,
             ),
@@ -1235,7 +1252,7 @@ impl<'a> Traverse<'a, ()> for SolidTransform<'a> {
                     prepend.push(build_named_value_import_statement(
                         ast,
                         span,
-                        module_name,
+                        helper_runtime_module_name(module_name, helper),
                         helper,
                         &local_name,
                     ));

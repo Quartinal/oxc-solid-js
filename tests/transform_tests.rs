@@ -442,6 +442,27 @@ fn test_universal_use_directive_and_ref_use_use_helper() {
 }
 
 #[test]
+fn test_dom_use_helper_imports_from_solid_js_when_module_name_is_solid_web() {
+    let code = transform_dom_with_options(
+        r#"<div use:something />"#,
+        TransformOptions {
+            module_name: "@solidjs/web",
+            ..TransformOptions::solid_defaults()
+        },
+    );
+
+    assert!(
+        code.contains("import { use as _$use } from \"solid-js\";")
+            || code.contains("use as _$use") && code.contains("from \"solid-js\""),
+        "expected `use` helper to come from solid-js base runtime, got:\n{code}"
+    );
+    assert!(
+        !code.contains("import { use as _$use } from \"@solidjs/web\";"),
+        "`use` helper must not be imported from @solidjs/web, got:\n{code}"
+    );
+}
+
+#[test]
 fn test_universal_component_children_emit_create_element_output() {
     let code = transform_universal(r#"<Comp><div>Hello</div></Comp>"#);
     assert!(

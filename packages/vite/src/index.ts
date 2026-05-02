@@ -165,7 +165,6 @@ export default function solidOxc(options: SolidOxcOptions = {}): Plugin {
   const packageJsonCache = new Map<string, unknown>();
 
   let isDev = false;
-  let buildSSR = false;
   let needHmr = false;
   let runtimeCode: string | null = null;
   const REFRESH_VIRTUAL_ID = '/@solid-refresh';
@@ -198,7 +197,6 @@ export default function solidOxc(options: SolidOxcOptions = {}): Plugin {
 
     configResolved(config) {
       isDev = config.command === 'serve';
-      buildSSR = typeof config.build?.ssr === 'boolean' ? config.build.ssr : !!config.build?.ssr;
 
       // Determine if HMR should be active
       needHmr = isDev && opts.hot !== false;
@@ -337,19 +335,9 @@ export default function solidOxc(options: SolidOxcOptions = {}): Plugin {
         return null;
       }
 
-      const envName = (this as unknown as { environment?: { name?: string; config?: { consumer?: string } } })
-        .environment?.name;
-      const envConsumer = (this as unknown as { environment?: { name?: string; config?: { consumer?: string } } })
-        .environment?.config?.consumer;
-      const inferredSSR =
-        envConsumer === 'server' ||
-        envName === 'ssr' ||
-        envName === 'nitro' ||
-        envName === 'server' ||
-        envName === 'worker';
       const transformSSR =
         opts.ssr ??
-        (typeof transformOptions?.ssr === 'boolean' ? transformOptions.ssr : inferredSSR || buildSSR);
+        (typeof transformOptions?.ssr === 'boolean' ? transformOptions.ssr : false);
       const generate = transformSSR ? 'ssr' : opts.generate;
       const moduleName =
         transformSSR && opts.module_name === defaultOptions.module_name

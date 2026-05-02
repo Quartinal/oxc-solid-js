@@ -351,11 +351,15 @@ export default function solidOxc(options: SolidOxcOptions = {}): Plugin {
         opts.ssr ??
         (typeof transformOptions?.ssr === 'boolean' ? transformOptions.ssr : inferredSSR || buildSSR);
       const generate = transformSSR ? 'ssr' : opts.generate;
+      const moduleName =
+        transformSSR && opts.module_name === defaultOptions.module_name
+          ? 'solid-js/web'
+          : opts.module_name;
 
       try {
         const result = oxcJsxDomExpr.transformJsx(code, {
           filename: fileId,
-          moduleName: opts.module_name,
+          moduleName,
           generate,
           hydratable: opts.hydratable,
           delegateEvents: opts.delegate_events,

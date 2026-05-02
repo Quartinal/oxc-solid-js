@@ -603,7 +603,7 @@ fn transform_use_directive<'a>(
     let use_call = call_expr(
         ast,
         attr.span,
-        context.helper_ident_expr_with_source(ast, attr.span, "use", HelperSource::Universal),
+        context.helper_ident_expr_with_source(ast, attr.span, "use", HelperSource::Base),
         [directive, elem, callback],
     );
 

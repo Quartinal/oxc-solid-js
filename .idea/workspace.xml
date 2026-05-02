@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2f8bb672-4317-401c-9e81-a59abe9b07e4" name="Changes" comment="Fix Compiler for BunJS &amp; Bump Version">
-      <change beforePath="$PROJECT_DIR$/.github/workflows/CI.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/CI.yml" afterDir="false" />
+    <list default="true" id="2f8bb672-4317-401c-9e81-a59abe9b07e4" name="Changes" comment="lmao">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/npm/darwin-arm64/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/npm/darwin-arm64/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/npm/darwin-x64/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/npm/darwin-x64/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/npm/linux-x64-gnu/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/npm/linux-x64-gnu/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/npm/win32-x64-msvc/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/npm/win32-x64-msvc/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crates/dom/src/element.rs" beforeDir="false" afterPath="$PROJECT_DIR$/crates/dom/src/element.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/crates/dom/src/universal_element.rs" beforeDir="false" afterPath="$PROJECT_DIR$/crates/dom/src/universal_element.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/rolldown/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/rolldown/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/packages/vite/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/packages/vite/src/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,7 +17,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="11079" />
+    <option name="cachedIndexableFilesCount" value="11832" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -100,7 +98,8 @@
       <workItem from="1777669662108" duration="5667000" />
       <workItem from="1777676163116" duration="315000" />
       <workItem from="1777682266951" duration="790000" />
-      <workItem from="1777683143698" duration="400000" />
+      <workItem from="1777683143698" duration="853000" />
+      <workItem from="1777684683941" duration="1859000" />
     </task>
     <task id="LOCAL-00001" summary="Fixes">
       <option name="closed" value="true" />
@@ -142,7 +141,15 @@
       <option name="project" value="LOCAL" />
       <updated>1777682809718</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="lmao">
+      <option name="closed" value="true" />
+      <created>1777683565638</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1777683565638</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -154,6 +161,7 @@
     <MESSAGE value="Fix two failing CI actions" />
     <MESSAGE value="Bump Version" />
     <MESSAGE value="Fix Compiler for BunJS &amp; Bump Version" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix Compiler for BunJS &amp; Bump Version" />
+    <MESSAGE value="lmao" />
+    <option name="LAST_COMMIT_MESSAGE" value="lmao" />
   </component>
 </project>

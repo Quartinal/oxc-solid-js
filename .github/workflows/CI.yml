@@ -359,7 +359,7 @@ jobs:
       - name: Pack compiler meta tarball
         run: |
           set -euo pipefail
-          mkdir -p release-assets release-assets/compiler-meta
+          mkdir -p release-assets release-assets/compiler-meta/package
           version="$(node -p "require('./package.json').version")"
           repo="${{ github.repository }}"
           base_url="https://github.com/${repo}/releases/download/v${version}"
@@ -382,11 +382,11 @@ jobs:
             delete pkg.scripts;
             delete pkg.napi;
             pkg.version = version;
-            fs.writeFileSync('release-assets/compiler-meta/package.json', JSON.stringify(pkg, null, 2) + '\\n');
+            fs.writeFileSync('release-assets/compiler-meta/package/package.json', JSON.stringify(pkg, null, 2) + '\\n');
           "
 
-          cp index.js index.d.ts release-assets/compiler-meta/
-          tar -czf release-assets/oxc-solid-js-compiler.tgz -C release-assets/compiler-meta package.json index.js index.d.ts
+          cp index.js index.d.ts release-assets/compiler-meta/package/
+          tar -czf release-assets/oxc-solid-js-compiler.tgz -C release-assets/compiler-meta package
       - name: Pack Vite plugin tarball
         run: |
           set -euo pipefail

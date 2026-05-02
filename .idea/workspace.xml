@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2f8bb672-4317-401c-9e81-a59abe9b07e4" name="Changes" comment="Fix two failing CI actions">
-      <change beforePath="$PROJECT_DIR$/npm/darwin-arm64/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/npm/darwin-arm64/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/npm/darwin-x64/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/npm/darwin-x64/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/npm/linux-x64-gnu/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/npm/linux-x64-gnu/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/npm/win32-x64-msvc/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/npm/win32-x64-msvc/package.json" afterDir="false" />
+    <list default="true" id="2f8bb672-4317-401c-9e81-a59abe9b07e4" name="Changes" comment="Bump Version">
+      <change beforePath="$PROJECT_DIR$/.github/workflows/CI.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/CI.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,7 +14,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="11076" />
+    <option name="cachedIndexableFilesCount" value="11079" />
     <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
   </component>
   <component name="Git.Settings">
@@ -96,6 +94,7 @@
       <updated>1777669660998</updated>
       <workItem from="1777669662108" duration="5667000" />
       <workItem from="1777676163116" duration="315000" />
+      <workItem from="1777682266951" duration="315000" />
     </task>
     <task id="LOCAL-00001" summary="Fixes">
       <option name="closed" value="true" />
@@ -121,7 +120,15 @@
       <option name="project" value="LOCAL" />
       <updated>1777673835760</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Bump Version">
+      <option name="closed" value="true" />
+      <created>1777680921269</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1777680921269</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -131,6 +138,7 @@
     <MESSAGE value="Fixes" />
     <MESSAGE value="why webstorm not push???" />
     <MESSAGE value="Fix two failing CI actions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix two failing CI actions" />
+    <MESSAGE value="Bump Version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bump Version" />
   </component>
 </project>

@@ -135,18 +135,22 @@ jobs:
               os="linux"
               cpu="x64"
               libc="glibc"
+              package_name="@oxc-solid-js/compiler-linux-x64-gnu"
               ;;
             x86_64-pc-windows-msvc)
               os="win32"
               cpu="x64"
+              package_name="@oxc-solid-js/compiler-win32-x64-msvc"
               ;;
             x86_64-apple-darwin)
               os="darwin"
               cpu="x64"
+              package_name="@oxc-solid-js/compiler-darwin-x64"
               ;;
             aarch64-apple-darwin)
               os="darwin"
               cpu="arm64"
+              package_name="@oxc-solid-js/compiler-darwin-arm64"
               ;;
             *)
               echo "Unsupported target for release tarball metadata: $target" >&2
@@ -154,7 +158,7 @@ jobs:
               ;;
           esac
 
-          package_dir="dist/target-package"
+          package_dir="dist/target-package/package"
           mkdir -p "$package_dir"
 
           cp "$node_file" "$package_dir/"
@@ -163,7 +167,7 @@ jobs:
             node -e "
               const fs = require('fs');
               const pkg = {
-                name: '@oxc-solid-js/compiler-${target}',
+                name: '${package_name}',
                 version: '${version}',
                 main: '${node_file}',
                 os: ['${os}'],
@@ -177,7 +181,7 @@ jobs:
             node -e "
               const fs = require('fs');
               const pkg = {
-                name: '@oxc-solid-js/compiler-${target}',
+                name: '${package_name}',
                 version: '${version}',
                 main: '${node_file}',
                 os: ['${os}'],
@@ -188,7 +192,7 @@ jobs:
             "
           fi
 
-          tar -czf "dist/oxc-solid-js-compiler-${target}.tar.gz" -C "$package_dir" "$node_file" package.json
+          tar -czf "dist/oxc-solid-js-compiler-${target}.tar.gz" -C "dist/target-package" package
         shell: bash
       - name: Upload release tarball
         uses: actions/upload-artifact@v7

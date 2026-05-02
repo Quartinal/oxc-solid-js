@@ -58,7 +58,11 @@ fn dom_helper_expr<'a>(
     span: Span,
     name: &str,
 ) -> Expression<'a> {
-    let source = if name == "use" { HelperSource::Base } else { HelperSource::Dom };
+    let source = if name == "use" {
+        HelperSource::Base
+    } else {
+        HelperSource::Dom
+    };
     context.helper_ident_expr_with_source(ast, span, name, source)
 }
 

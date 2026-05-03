@@ -600,12 +600,8 @@ fn transform_use_directive<'a>(
     };
 
     let callback = arrow_zero_params_return_expr(ast, attr.span, value_expr);
-    let use_call = call_expr(
-        ast,
-        attr.span,
-        context.helper_ident_expr_with_source(ast, attr.span, "use", HelperSource::Base),
-        [directive, elem, callback],
-    );
+    // In solid-js 2.x, directives are called as directive(element, accessor) directly.
+    let use_call = call_expr(ast, attr.span, directive, [elem, callback]);
 
     // Match Babel unshift semantics for use:/ref directives.
     unshift_expr_statement(result, ast, attr.span, use_call);
@@ -704,14 +700,14 @@ fn transform_ref<'a>(
                 BinaryOperator::StrictEquality,
                 function_str,
             );
-            let use_call = call_expr(
+            let apply_ref_call = call_expr(
                 ast,
                 attr.span,
                 context.helper_ident_expr_with_source(
                     ast,
                     attr.span,
-                    "use",
-                    HelperSource::Universal,
+                    "applyRef",
+                    HelperSource::Dom,
                 ),
                 [
                     temp_ident.clone_in(ast.allocator),
@@ -721,7 +717,7 @@ fn transform_ref<'a>(
             let assign = ast.expression_assignment(SPAN, AssignmentOperator::Assign, target, elem);
             let cond_stmt = Statement::ExpressionStatement(ast.alloc_expression_statement(
                 attr.span,
-                ast.expression_conditional(SPAN, test, use_call, assign),
+                ast.expression_conditional(SPAN, test, apply_ref_call, assign),
             ));
             result.statements.insert(0, cond_stmt);
             result.statements.insert(0, var_decl);
@@ -729,19 +725,19 @@ fn transform_ref<'a>(
         }
     }
 
-    // Babel parity: const/module refs and inline function refs are passed directly to use().
+    // Babel parity: const/module refs and inline function refs are passed directly to applyRef().
     if is_constant_identifier_ref(expr, ctx) || is_function_expression(expr) {
-        let use_call = call_expr(
+        let apply_ref_call = call_expr(
             ast,
             attr.span,
-            context.helper_ident_expr_with_source(ast, attr.span, "use", HelperSource::Universal),
+            context.helper_ident_expr_with_source(ast, attr.span, "applyRef", HelperSource::Dom),
             [context.clone_expr(expr), elem],
         );
-        unshift_expr_statement(result, ast, attr.span, use_call);
+        unshift_expr_statement(result, ast, attr.span, apply_ref_call);
         return;
     }
 
-    // Fallback: evaluate once into temp, then call use(temp, el) only when function.
+    // Fallback: evaluate once into temp, then call applyRef(temp, el) only when function.
     let temp_name = context.generate_uid("ref$");
     let temp_ident = ident_expr(ast, attr.span, &temp_name);
     let var_decl = ref_temp_declaration(ast, attr.span, &temp_name, context.clone_expr(expr));
@@ -759,15 +755,15 @@ fn transform_ref<'a>(
         BinaryOperator::StrictEquality,
         function_str,
     );
-    let use_call = call_expr(
+    let apply_ref_call = call_expr(
         ast,
         attr.span,
-        context.helper_ident_expr_with_source(ast, attr.span, "use", HelperSource::Universal),
+        context.helper_ident_expr_with_source(ast, attr.span, "applyRef", HelperSource::Dom),
         [temp_ident, elem],
     );
     let logical_stmt = Statement::ExpressionStatement(ast.alloc_expression_statement(
         attr.span,
-        ast.expression_logical(SPAN, test, LogicalOperator::And, use_call),
+        ast.expression_logical(SPAN, test, LogicalOperator::And, apply_ref_call),
     ));
     result.statements.insert(0, logical_stmt);
     result.statements.insert(0, var_decl);

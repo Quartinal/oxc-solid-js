@@ -427,22 +427,47 @@ fn test_universal_spread_attribute_uses_spread_helper() {
 }
 
 #[test]
-fn test_universal_use_directive_and_ref_use_use_helper() {
+fn test_universal_use_directive_calls_directly() {
+    // In solid-js 2.x, use: directives are called as directive(element, accessor) directly.
     let use_code = transform_universal(r#"<div use:something />"#);
     assert!(
-        use_code.contains("use as _$use") || use_code.contains("_$use("),
-        "expected use:directive to register/use use helper, got:\n{use_code}"
+        use_code.contains("something("),
+        "expected use:directive to call directive directly, got:\n{use_code}"
+    );
+    assert!(
+        !use_code.contains("_$use("),
+        "use:directive must not go through `use` helper, got:\n{use_code}"
     );
 
     let ref_code = transform_universal(r#"let r; <div ref={r} />"#);
     assert!(
-        ref_code.contains("use as _$use") || ref_code.contains("_$use("),
-        "expected ref lowering to include use helper path, got:\n{ref_code}"
+        ref_code.contains("applyRef as _$applyRef") || ref_code.contains("_$applyRef("),
+        "expected ref lowering to use applyRef helper, got:\n{ref_code}"
     );
 }
 
 #[test]
-fn test_dom_use_helper_imports_from_solid_js_when_module_name_is_solid_web() {
+fn test_dom_ref_imports_apply_ref_from_solidjs_web() {
+    let code = transform_dom_with_options(
+        r#"<div ref={el => setRef(el)} />"#,
+        TransformOptions {
+            module_name: "@solidjs/web",
+            ..TransformOptions::solid_defaults()
+        },
+    );
+
+    assert!(
+        code.contains("applyRef as _$applyRef") || code.contains("_$applyRef("),
+        "expected `applyRef` helper from @solidjs/web, got:\n{code}"
+    );
+    assert!(
+        !code.contains("\"use\"") && !code.contains("use as _$use"),
+        "`use` must not be imported in solid-js 2.x, got:\n{code}"
+    );
+}
+
+#[test]
+fn test_dom_use_directive_calls_directly() {
     let code = transform_dom_with_options(
         r#"<div use:something />"#,
         TransformOptions {
@@ -452,13 +477,12 @@ fn test_dom_use_helper_imports_from_solid_js_when_module_name_is_solid_web() {
     );
 
     assert!(
-        code.contains("import { use as _$use } from \"solid-js\";")
-            || code.contains("use as _$use") && code.contains("from \"solid-js\""),
-        "expected `use` helper to come from solid-js base runtime, got:\n{code}"
+        code.contains("something("),
+        "expected use:directive to call directive directly, got:\n{code}"
     );
     assert!(
-        !code.contains("import { use as _$use } from \"@solidjs/web\";"),
-        "`use` helper must not be imported from @solidjs/web, got:\n{code}"
+        !code.contains("use as _$use"),
+        "`use` helper must not be imported in solid-js 2.x, got:\n{code}"
     );
 }
 

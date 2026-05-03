@@ -58,12 +58,7 @@ fn dom_helper_expr<'a>(
     span: Span,
     name: &str,
 ) -> Expression<'a> {
-    let source = if name == "use" {
-        HelperSource::Base
-    } else {
-        HelperSource::Dom
-    };
-    context.helper_ident_expr_with_source(ast, span, name, source)
+    context.helper_ident_expr_with_source(ast, span, name, HelperSource::Dom)
 }
 
 fn static_member<'a>(
@@ -2297,17 +2292,17 @@ fn transform_ref<'a>(
         if let Some(expr) = container.expression.as_expression() {
             let elem = ident_expr(ast, attr.span, elem_id);
 
-            // Function refs are invoked through `use` helper for parity with Babel.
+            // Function refs are invoked through `applyRef` helper for parity with Babel.
             if matches!(
                 expr,
                 Expression::ArrowFunctionExpression(_) | Expression::FunctionExpression(_)
             ) || !is_writable_ref_target(expr, ctx)
             {
-                let use_callee = dom_helper_expr(context, ast, attr.span, "use");
+                let apply_ref_callee = dom_helper_expr(context, ast, attr.span, "applyRef");
                 result.exprs.push(call_expr(
                     ast,
                     attr.span,
-                    use_callee,
+                    apply_ref_callee,
                     [context.clone_expr(expr), elem],
                 ));
                 return;
@@ -2351,11 +2346,11 @@ fn transform_ref<'a>(
                 function_str,
             );
 
-            let use_callee = dom_helper_expr(context, ast, attr.span, "use");
+            let apply_ref_callee = dom_helper_expr(context, ast, attr.span, "applyRef");
             let use_call = call_expr(
                 ast,
                 attr.span,
-                use_callee,
+                apply_ref_callee,
                 [
                     ref_ident.clone_in(ast.allocator),
                     elem.clone_in(ast.allocator),
@@ -2660,16 +2655,12 @@ fn transform_directive<'a>(
             )
         });
 
-    let callee = dom_helper_expr(context, ast, attr.span, "use");
+    // In solid-js 2.x, directives are called as directive(element, accessor) directly.
     let expr = call_expr(
         ast,
         attr.span,
-        callee,
-        [
-            ident_expr(ast, attr.span, directive_name),
-            ident_expr(ast, attr.span, elem_id),
-            value,
-        ],
+        ident_expr(ast, attr.span, directive_name),
+        [ident_expr(ast, attr.span, elem_id), value],
     );
     result.exprs.insert(0, expr);
 }

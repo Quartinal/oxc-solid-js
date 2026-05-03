@@ -66,12 +66,8 @@ fn base_runtime_module_name(module_name: &str) -> &str {
     }
 }
 
-fn helper_runtime_module_name<'a>(module_name: &'a str, helper: &str) -> &'a str {
-    if helper == "use" {
-        base_runtime_module_name(module_name)
-    } else {
-        module_name
-    }
+fn helper_runtime_module_name<'a>(module_name: &'a str, _helper: &str) -> &'a str {
+    module_name
 }
 
 fn jsx_element_name_is_component(name: &JSXElementName<'_>) -> bool {
@@ -1056,7 +1052,7 @@ impl<'a> Traverse<'a, ()> for SolidTransform<'a> {
                 for helper in reordered_helpers {
                     let move_to_tail = helper.module == dom_module_name
                         && helper.module != self.options.module_name
-                        && matches!(helper.imported.as_str(), "insert" | "use");
+                        && matches!(helper.imported.as_str(), "insert" | "applyRef");
                     if move_to_tail {
                         moved_dom_insert_helpers.push(helper);
                     } else {

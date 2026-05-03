@@ -1,6 +1,6 @@
 {
   "name": "@oxc-solid-js/compiler-darwin-x64",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "cpu": [
     "x64"
   ],

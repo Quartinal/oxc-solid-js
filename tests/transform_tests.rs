@@ -439,15 +439,22 @@ fn test_universal_use_directive_calls_directly() {
         "use:directive must not go through `use` helper, got:\n{use_code}"
     );
 
+    // Variable refs use typeof check then call directly: _ref$(el) or assign.
+    // No helper import needed since @solidjs/web does not export `use`.
     let ref_code = transform_universal(r#"let r; <div ref={r} />"#);
     assert!(
-        ref_code.contains("use as _$use") || ref_code.contains("_$use("),
-        "expected ref lowering to use `use` helper (matches dom-expressions Babel output), got:\n{ref_code}"
+        ref_code.contains("_ref$(") || ref_code.contains("typeof _ref$"),
+        "expected variable ref to use direct call pattern, got:\n{ref_code}"
+    );
+    assert!(
+        !ref_code.contains("_$use(") && !ref_code.contains("applyRef"),
+        "ref must not import any helper from DOM module, got:\n{ref_code}"
     );
 }
 
 #[test]
-fn test_dom_ref_uses_use_helper_from_solidjs_web() {
+fn test_dom_ref_calls_directly_no_helper() {
+    // @solidjs/web does not export `use` or `applyRef`, so function refs must be called directly.
     let code = transform_dom_with_options(
         r#"<div ref={el => setRef(el)} />"#,
         TransformOptions {
@@ -456,14 +463,14 @@ fn test_dom_ref_uses_use_helper_from_solidjs_web() {
         },
     );
 
-    // dom-expressions Babel plugin uses `use` (not `applyRef`) for function refs
+    // Inline function ref: the arrow function is called directly with the element
     assert!(
-        code.contains("use as _$use") || code.contains("_$use("),
-        "expected `use` helper from @solidjs/web for function refs (matches Babel output), got:\n{code}"
+        code.contains("el => setRef(el)") || code.contains("(el) => setRef(el)"),
+        "expected inline function ref to appear in call position, got:\n{code}"
     );
     assert!(
-        !code.contains("applyRef"),
-        "`applyRef` must not appear — use `use` to match dom-expressions Babel output, got:\n{code}"
+        !code.contains("applyRef") && !code.contains("_$use("),
+        "no helper import must appear for function refs with @solidjs/web, got:\n{code}"
     );
 }
 

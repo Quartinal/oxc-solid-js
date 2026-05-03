@@ -238,7 +238,6 @@ const DOM_RUNTIME_HELPERS: &[&str] = &[
     "spread",
     "style",
     "template",
-    "use",
 ];
 
 impl<'a> BlockContext<'a> {

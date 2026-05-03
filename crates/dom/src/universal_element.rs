@@ -700,14 +700,12 @@ fn transform_ref<'a>(
                 BinaryOperator::StrictEquality,
                 function_str,
             );
+            // Call ref(element) directly — no helper needed for @solidjs/web compatibility.
             let apply_ref_call = call_expr(
                 ast,
                 attr.span,
-                context.helper_ident_expr_with_source(ast, attr.span, "use", HelperSource::Dom),
-                [
-                    temp_ident.clone_in(ast.allocator),
-                    elem.clone_in(ast.allocator),
-                ],
+                temp_ident.clone_in(ast.allocator),
+                [elem.clone_in(ast.allocator)],
             );
             let assign = ast.expression_assignment(SPAN, AssignmentOperator::Assign, target, elem);
             let cond_stmt = Statement::ExpressionStatement(ast.alloc_expression_statement(
@@ -720,19 +718,15 @@ fn transform_ref<'a>(
         }
     }
 
-    // Babel parity: const/module refs and inline function refs are passed directly to use().
+    // Const/module refs and inline function refs: call ref(element) directly.
+    // @solidjs/web does not export a `use` helper, so no import is needed.
     if is_constant_identifier_ref(expr, ctx) || is_function_expression(expr) {
-        let apply_ref_call = call_expr(
-            ast,
-            attr.span,
-            context.helper_ident_expr_with_source(ast, attr.span, "use", HelperSource::Dom),
-            [context.clone_expr(expr), elem],
-        );
+        let apply_ref_call = call_expr(ast, attr.span, context.clone_expr(expr), [elem]);
         unshift_expr_statement(result, ast, attr.span, apply_ref_call);
         return;
     }
 
-    // Fallback: evaluate once into temp, then call use(temp, el) only when function.
+    // Fallback: evaluate once into temp, then call temp(element) only when function.
     let temp_name = context.generate_uid("ref$");
     let temp_ident = ident_expr(ast, attr.span, &temp_name);
     let var_decl = ref_temp_declaration(ast, attr.span, &temp_name, context.clone_expr(expr));
@@ -750,12 +744,7 @@ fn transform_ref<'a>(
         BinaryOperator::StrictEquality,
         function_str,
     );
-    let apply_ref_call = call_expr(
-        ast,
-        attr.span,
-        context.helper_ident_expr_with_source(ast, attr.span, "use", HelperSource::Dom),
-        [temp_ident, elem],
-    );
+    let apply_ref_call = call_expr(ast, attr.span, temp_ident, [elem]);
     let logical_stmt = Statement::ExpressionStatement(ast.alloc_expression_statement(
         attr.span,
         ast.expression_logical(SPAN, test, LogicalOperator::And, apply_ref_call),

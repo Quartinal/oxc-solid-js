@@ -1052,7 +1052,7 @@ impl<'a> Traverse<'a, ()> for SolidTransform<'a> {
                 for helper in reordered_helpers {
                     let move_to_tail = helper.module == dom_module_name
                         && helper.module != self.options.module_name
-                        && matches!(helper.imported.as_str(), "insert" | "use");
+                        && matches!(helper.imported.as_str(), "insert");
                     if move_to_tail {
                         moved_dom_insert_helpers.push(helper);
                     } else {

@@ -2292,19 +2292,16 @@ fn transform_ref<'a>(
         if let Some(expr) = container.expression.as_expression() {
             let elem = ident_expr(ast, attr.span, elem_id);
 
-            // Function refs are invoked through the `use` helper (matches dom-expressions Babel output).
+            // Inline function refs and non-lvalue expressions are called directly with the element.
+            // @solidjs/web does not export a `use` helper, so we call ref(element) directly.
             if matches!(
                 expr,
                 Expression::ArrowFunctionExpression(_) | Expression::FunctionExpression(_)
             ) || !is_writable_ref_target(expr, ctx)
             {
-                let apply_ref_callee = dom_helper_expr(context, ast, attr.span, "use");
-                result.exprs.push(call_expr(
-                    ast,
-                    attr.span,
-                    apply_ref_callee,
-                    [context.clone_expr(expr), elem],
-                ));
+                result
+                    .exprs
+                    .push(call_expr(ast, attr.span, context.clone_expr(expr), [elem]));
                 return;
             }
 
@@ -2346,15 +2343,12 @@ fn transform_ref<'a>(
                 function_str,
             );
 
-            let apply_ref_callee = dom_helper_expr(context, ast, attr.span, "use");
+            // Call ref(element) directly — no helper needed for @solidjs/web compatibility.
             let use_call = call_expr(
                 ast,
                 attr.span,
-                apply_ref_callee,
-                [
-                    ref_ident.clone_in(ast.allocator),
-                    elem.clone_in(ast.allocator),
-                ],
+                ref_ident.clone_in(ast.allocator),
+                [elem.clone_in(ast.allocator)],
             );
 
             if let Some(target) = expression_to_assignment_target(context.clone_expr(expr)) {

@@ -174,10 +174,19 @@ fn get_children_ssr<'a, 'b>(
                 }
             }
             JSXChild::Element(_) | JSXChild::Fragment(_) => {
-                // Transform the child JSX element/fragment
-                if let Some(result) = transform_child(child) {
+                // Each child element gets its own group scope so that dynamic
+                // attribute group variables (_v$) are declared in the same IIFE
+                // as the template call that references them, not in the parent scope.
+                context.begin_group_scope();
+                let child_result = transform_child(child);
+                let child_group_state = context.take_group_scope();
+                context.clear_group_scope();
+                if let Some(result) = child_result {
                     children.push(template::create_template_expression(
-                        context, ast, &result, None,
+                        context,
+                        ast,
+                        &result,
+                        child_group_state,
                     ));
                 }
             }

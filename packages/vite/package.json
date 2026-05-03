@@ -1,6 +1,6 @@
 {
   "name": "@oxc-solid-js/vite",
-  "version": "0.1.0-alpha.15",
+  "version": "0.1.0-alpha.16",
   "description": "Vite plugin for @oxc-solid-js/compiler",
   "type": "module",
   "main": "dist/index.js",

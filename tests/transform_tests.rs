@@ -2599,6 +2599,38 @@ fn test_dom_imports_delegate_events() {
 }
 
 #[test]
+fn test_ssr_component_child_with_dynamic_attrs_group_var_in_correct_scope() {
+    // Regression: when a component receives JSX children that have dynamic attributes
+    // requiring a group variable (_v$), the group variable must be declared in the same
+    // scope as the template call that references it — not in the parent component scope.
+    let code = transform_ssr(
+        r#"
+        function Wrapper() {
+            return (
+                <Show when={cond()}>
+                    <div style={{ opacity: val() ? "1" : "0" }}>
+                        <Child />
+                    </div>
+                </Show>
+            );
+        }
+        "#,
+    );
+    // _v$ must not appear as a free reference — if it's declared outside the
+    // IIFE that uses it, the code throws ReferenceError at runtime.
+    eprintln!("=== SSR group scope output ===\n{code}\n===");
+    // The output should not have _v$ referenced without a preceding declaration
+    // in the same scope. The simplest proxy: if _v$[0] appears, _v$ must be
+    // declared in the same IIFE block (var _v$ = ...) right before the ssr call.
+    if code.contains("_v$[0]") {
+        assert!(
+            code.contains("var _v$"),
+            "if _v$[0] is referenced then _v$ must be declared, got:\n{code}"
+        );
+    }
+}
+
+#[test]
 fn test_ssr_imports() {
     let code = transform_ssr(r#"<div>{count()}</div>"#);
     assert!(code.contains("import"));

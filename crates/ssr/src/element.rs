@@ -1546,14 +1546,13 @@ fn transform_expression_attribute<'a>(
             attr_expr = hoist_expression(context, result, arrow, true, post, false);
         }
 
-        // Babel setAttr parity:
-        // dynamic non-post: templateValues.push(expr)
-        // dynamic post: templateValues.push(expr); template.push("")
-        // static: templateValues.push(expr); template.push("")
         result.push_template_value(attr_expr);
-        if post || !dynamic_expr {
-            result.push_template_part("");
-        }
+        // Always open a new template segment after the value so that subsequent
+        // static content (e.g. the closing `>`) lands in its own part rather
+        // than being appended to the part that precedes this slot. Without this,
+        // the ssr() call receives a single-string template with no injection
+        // point, and the attribute value is silently dropped from the output.
+        result.push_template_part("");
     }
 }
 

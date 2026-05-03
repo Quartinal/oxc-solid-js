@@ -2228,6 +2228,30 @@ fn test_ssr_plan_3_3_dynamic_generic_attr_uses_ssr_attribute_with_escape_attr_fl
 }
 
 #[test]
+fn test_ssr_dynamic_attr_injected_into_correct_template_slot() {
+    // Regression test: dynamic attributes on native elements must be injected
+    // at the correct position in the template string. Previously, push_template_value
+    // did not open a new template segment, causing the closing `>` to be appended
+    // to the pre-attribute part, collapsing the injection slot.
+    let code = transform_ssr(r#"<script defer src={path()} />"#);
+
+    // The template must be an array with the attribute slot between parts,
+    // not a single string with no injection point.
+    assert!(
+        code.contains("[\"<script defer\"") || code.contains("[\"<script defer\","),
+        "template must split around the dynamic src attribute; got: {code}"
+    );
+    assert!(
+        !code.contains("\"<script defer></script>\""),
+        "template must not be a single collapsed string with no injection slot: {code}"
+    );
+    assert!(
+        code.contains("ssrAttribute(\"src\""),
+        "src attribute must route through ssrAttribute: {code}"
+    );
+}
+
+#[test]
 fn test_ssr_plan_3_3_dynamic_text_child_uses_escape_without_attr_flag() {
     let code = transform_ssr(r#"<div>{value()}</div>"#);
 

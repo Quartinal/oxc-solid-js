@@ -2292,13 +2292,13 @@ fn transform_ref<'a>(
         if let Some(expr) = container.expression.as_expression() {
             let elem = ident_expr(ast, attr.span, elem_id);
 
-            // Function refs are invoked through `applyRef` helper for parity with Babel.
+            // Function refs are invoked through the `use` helper (matches dom-expressions Babel output).
             if matches!(
                 expr,
                 Expression::ArrowFunctionExpression(_) | Expression::FunctionExpression(_)
             ) || !is_writable_ref_target(expr, ctx)
             {
-                let apply_ref_callee = dom_helper_expr(context, ast, attr.span, "applyRef");
+                let apply_ref_callee = dom_helper_expr(context, ast, attr.span, "use");
                 result.exprs.push(call_expr(
                     ast,
                     attr.span,
@@ -2346,7 +2346,7 @@ fn transform_ref<'a>(
                 function_str,
             );
 
-            let apply_ref_callee = dom_helper_expr(context, ast, attr.span, "applyRef");
+            let apply_ref_callee = dom_helper_expr(context, ast, attr.span, "use");
             let use_call = call_expr(
                 ast,
                 attr.span,

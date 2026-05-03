@@ -441,13 +441,13 @@ fn test_universal_use_directive_calls_directly() {
 
     let ref_code = transform_universal(r#"let r; <div ref={r} />"#);
     assert!(
-        ref_code.contains("applyRef as _$applyRef") || ref_code.contains("_$applyRef("),
-        "expected ref lowering to use applyRef helper, got:\n{ref_code}"
+        ref_code.contains("use as _$use") || ref_code.contains("_$use("),
+        "expected ref lowering to use `use` helper (matches dom-expressions Babel output), got:\n{ref_code}"
     );
 }
 
 #[test]
-fn test_dom_ref_imports_apply_ref_from_solidjs_web() {
+fn test_dom_ref_uses_use_helper_from_solidjs_web() {
     let code = transform_dom_with_options(
         r#"<div ref={el => setRef(el)} />"#,
         TransformOptions {
@@ -456,13 +456,14 @@ fn test_dom_ref_imports_apply_ref_from_solidjs_web() {
         },
     );
 
+    // dom-expressions Babel plugin uses `use` (not `applyRef`) for function refs
     assert!(
-        code.contains("applyRef as _$applyRef") || code.contains("_$applyRef("),
-        "expected `applyRef` helper from @solidjs/web, got:\n{code}"
+        code.contains("use as _$use") || code.contains("_$use("),
+        "expected `use` helper from @solidjs/web for function refs (matches Babel output), got:\n{code}"
     );
     assert!(
-        !code.contains("\"use\"") && !code.contains("use as _$use"),
-        "`use` must not be imported in solid-js 2.x, got:\n{code}"
+        !code.contains("applyRef"),
+        "`applyRef` must not appear — use `use` to match dom-expressions Babel output, got:\n{code}"
     );
 }
 

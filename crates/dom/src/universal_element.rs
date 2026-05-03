@@ -703,12 +703,7 @@ fn transform_ref<'a>(
             let apply_ref_call = call_expr(
                 ast,
                 attr.span,
-                context.helper_ident_expr_with_source(
-                    ast,
-                    attr.span,
-                    "applyRef",
-                    HelperSource::Dom,
-                ),
+                context.helper_ident_expr_with_source(ast, attr.span, "use", HelperSource::Dom),
                 [
                     temp_ident.clone_in(ast.allocator),
                     elem.clone_in(ast.allocator),
@@ -725,19 +720,19 @@ fn transform_ref<'a>(
         }
     }
 
-    // Babel parity: const/module refs and inline function refs are passed directly to applyRef().
+    // Babel parity: const/module refs and inline function refs are passed directly to use().
     if is_constant_identifier_ref(expr, ctx) || is_function_expression(expr) {
         let apply_ref_call = call_expr(
             ast,
             attr.span,
-            context.helper_ident_expr_with_source(ast, attr.span, "applyRef", HelperSource::Dom),
+            context.helper_ident_expr_with_source(ast, attr.span, "use", HelperSource::Dom),
             [context.clone_expr(expr), elem],
         );
         unshift_expr_statement(result, ast, attr.span, apply_ref_call);
         return;
     }
 
-    // Fallback: evaluate once into temp, then call applyRef(temp, el) only when function.
+    // Fallback: evaluate once into temp, then call use(temp, el) only when function.
     let temp_name = context.generate_uid("ref$");
     let temp_ident = ident_expr(ast, attr.span, &temp_name);
     let var_decl = ref_temp_declaration(ast, attr.span, &temp_name, context.clone_expr(expr));
@@ -758,7 +753,7 @@ fn transform_ref<'a>(
     let apply_ref_call = call_expr(
         ast,
         attr.span,
-        context.helper_ident_expr_with_source(ast, attr.span, "applyRef", HelperSource::Dom),
+        context.helper_ident_expr_with_source(ast, attr.span, "use", HelperSource::Dom),
         [temp_ident, elem],
     );
     let logical_stmt = Statement::ExpressionStatement(ast.alloc_expression_statement(

@@ -224,7 +224,6 @@ fn build_multi_dynamic_effect_call<'a>(
 
     let mut value_props = ast.vec_with_capacity(dynamics.len());
     let mut current_props = ast.vec_with_capacity(dynamics.len());
-    let mut prev_props = ast.vec_with_capacity(dynamics.len());
     let mut update_statements = ast.vec_with_capacity(dynamics.len());
 
     for (binding, id) in dynamics.iter().zip(ids.iter()) {
@@ -254,19 +253,20 @@ fn build_multi_dynamic_effect_call<'a>(
             ast.binding_pattern_binding_identifier(span, ast.allocator.alloc_str(id));
         current_props.push(ast.binding_property(span, current_key, current_value, true, false));
 
-        let prev_key = ast.property_key_static_identifier(span, ast.allocator.alloc_str(id));
-        prev_props.push(ast.object_property_kind_object_property(
-            span,
-            PropertyKind::Init,
-            prev_key,
-            ident_expr(ast, span, "undefined"),
-            false,
-            false,
-            false,
-        ));
-
         let current = ident_expr(ast, span, id);
-        let prev = static_member(ast, span, ident_expr(ast, span, prev_name), id);
+
+        // Safe prev access: `_p$ && _p$.key`
+        // On first run `_p$` is `undefined` (signals initialises `xe` to undefined),
+        // so a direct `_p$.key` would throw.  The `&&` short-circuits and returns
+        // `undefined` instead, which is then handled downstream by className/style
+        // (they accept undefined prev) and by the strict-inequality checks
+        // (value !== undefined is true, so setters always fire on first render).
+        let safe_prev = {
+            let p_ident = ident_expr(ast, span, prev_name);
+            let p_member = static_member(ast, span, ident_expr(ast, span, prev_name), id);
+            ast.expression_logical(span, p_ident, LogicalOperator::And, p_member)
+        };
+
         let always_set = binding.key == "class" || binding.key == "style";
 
         let setter = crate::template::generate_set_attr_expr_with_value(
@@ -275,7 +275,7 @@ fn build_multi_dynamic_effect_call<'a>(
             binding,
             current.clone_in(ast.allocator),
             if always_set {
-                Some(prev.clone_in(ast.allocator))
+                Some(safe_prev.clone_in(ast.allocator))
             } else {
                 None
             },
@@ -286,7 +286,7 @@ fn build_multi_dynamic_effect_call<'a>(
             setter
         } else {
             let changed =
-                ast.expression_binary(span, current, BinaryOperator::StrictInequality, prev);
+                ast.expression_binary(span, current, BinaryOperator::StrictInequality, safe_prev);
             ast.expression_logical(span, changed, LogicalOperator::And, setter)
         };
 
@@ -322,9 +322,12 @@ fn build_multi_dynamic_effect_call<'a>(
         callback_body,
     );
 
-    let init = ast.expression_object(span, prev_props);
+    // Note: do NOT pass an `init` object as the third arg.
+    // @solidjs/web's `effect(fn, effectFn, options)` treats the third arg as options
+    // (merging with `{ transparent: true }`), not as an initial prev value.
+    // The safe_prev accessor (_p$ && _p$.key) handles the undefined-on-first-run case.
     let effect = helper_ident_expr(ast, span, "effect");
-    call_expr(ast, span, effect, [getter, callback, init])
+    call_expr(ast, span, effect, [getter, callback])
 }
 
 pub fn build_dom_output_expr<'a>(

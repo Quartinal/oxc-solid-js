@@ -556,8 +556,10 @@ fn test_universal_multi_dynamic_attributes_batch_into_single_effect() {
             && code.contains("e: state.id")
             && code.contains("t: state.title")
             && code.contains("({ e, t }, _p$) =>")
-            && code.contains("\"id\", e, _p$.e")
-            && code.contains("\"title\", t, _p$.t"),
+            // Safe prev access: `_p$ && _p$.key` to avoid TypeError on first run
+            // (signals initialises xe=undefined, so bare `_p$.key` would throw)
+            && code.contains("_p$ && _p$.e")
+            && code.contains("_p$ && _p$.t"),
         "expected Babel-style batched effect object/callback shape, got:\n{code}"
     );
 }
@@ -2964,5 +2966,47 @@ fn test_dynamic_component_when_not_builtin_uses_plain_identifier() {
     assert!(
         !code.contains("dynamicComponent("),
         "Dynamic parity should stay on createComponent path, got:\n{code}"
+    );
+}
+
+#[test]
+fn test_dom_multi_dynamic_effect_uses_safe_prev_access() {
+    // Regression: multi-dynamic effect callbacks must not access _p$.key directly.
+    // On first run, _p$ is undefined (signals initialises xe to undefined), so
+    // `_p$.key` throws "Cannot read properties of undefined (reading 'key')".
+    // The fix uses `_p$ && _p$.key` which short-circuits safely to undefined.
+    let code = transform_dom(
+        r#"function Foo() {
+        const a = () => "foo";
+        const b = () => "bar";
+        return <div class={a()} id={b()}>hello</div>;
+    }"#,
+    );
+    assert!(
+        code.contains("_p$ && _p$."),
+        "Multi-dynamic prev access must use safe `_p$ && _p$.key` form to avoid TypeError on first run, got:\n{code}"
+    );
+    // No init/third arg to _$effect (it would be wrongly treated as options)
+    assert!(
+        !code.contains("undefined\n});"),
+        "Multi-dynamic effect must not pass init object as third arg (treated as options by @solidjs/web), got:\n{code}"
+    );
+}
+
+#[test]
+fn test_dom_multi_dynamic_class_and_style_safe_prev() {
+    // Regression: class and style bindings in multi-dynamic context pass prev via
+    // `_p$ && _p$.key`, which evaluates to undefined on first run and lets
+    // className/style handle the undefined prev gracefully.
+    let code = transform_dom(
+        r#"function Foo() {
+        const x = () => true;
+        const s = () => ({});
+        return <div class={["a", { b: x() }]} style={s()}>hello</div>;
+    }"#,
+    );
+    assert!(
+        code.contains("_p$ && _p$."),
+        "Class/style in multi-dynamic must use safe prev access, got:\n{code}"
     );
 }

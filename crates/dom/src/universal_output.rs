@@ -107,7 +107,6 @@ fn build_multi_dynamic_effect_call<'a>(
 
     let mut value_props = ast.vec_with_capacity(dynamics.len());
     let mut current_props = ast.vec_with_capacity(dynamics.len());
-    let mut prev_props = ast.vec_with_capacity(dynamics.len());
     let mut update_statements = ast.vec_with_capacity(dynamics.len());
 
     for (binding, id) in dynamics.iter().zip(ids.iter()) {
@@ -129,29 +128,32 @@ fn build_multi_dynamic_effect_call<'a>(
             ast.binding_pattern_binding_identifier(span, ast.allocator.alloc_str(id));
         current_props.push(ast.binding_property(span, current_key, current_value, true, false));
 
-        let prev_key = ast.property_key_static_identifier(span, ast.allocator.alloc_str(id));
-        prev_props.push(ast.object_property_kind_object_property(
-            span,
-            PropertyKind::Init,
-            prev_key,
-            ident_expr(ast, span, "undefined"),
-            false,
-            false,
-            false,
-        ));
-
         let current = ident_expr(ast, span, id);
-        let prev = static_member(ast, span, ident_expr(ast, span, prev_name), id);
+
+        // Safe prev access: `_p$ && _p$.key`
+        // On first run _p$ is undefined (signals initialises xe to undefined),
+        // so a bare `_p$.key` would throw. The `&&` short-circuits to undefined instead.
+        let safe_prev = {
+            let p_ident = ident_expr(ast, span, prev_name);
+            let p_member = static_member(ast, span, ident_expr(ast, span, prev_name), id);
+            ast.expression_logical(
+                span,
+                p_ident,
+                oxc_syntax::operator::LogicalOperator::And,
+                p_member,
+            )
+        };
 
         let setter = set_prop_expr_with_value(
             ast,
             span,
             binding,
             current.clone_in(ast.allocator),
-            Some(prev.clone_in(ast.allocator)),
+            Some(safe_prev.clone_in(ast.allocator)),
         );
 
-        let changed = ast.expression_binary(span, current, BinaryOperator::StrictInequality, prev);
+        let changed =
+            ast.expression_binary(span, current, BinaryOperator::StrictInequality, safe_prev);
         let update = ast.expression_logical(
             span,
             changed,
@@ -192,12 +194,14 @@ fn build_multi_dynamic_effect_call<'a>(
         callback_body,
     );
 
-    let init = ast.expression_object(span, prev_props);
+    // Note: do NOT pass an init object as third arg —
+    // @solidjs/web's effect(fn, effectFn, options) treats the third arg as options.
+    // The safe_prev accessor (_p$ && _p$.key) handles the undefined-on-first-run case.
     call_expr(
         ast,
         span,
         helper_ident_expr(ast, span, "effect"),
-        [getter, callback, init],
+        [getter, callback],
     )
 }
 

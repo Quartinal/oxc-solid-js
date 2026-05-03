@@ -197,3 +197,6 @@ Temporary Items
 # Lune parity harness
 harness/lune-parity/repos/
 harness/lune-parity/output/
+
+# API Test Files
+*.http

@@ -1,6 +1,6 @@
 {
   "name": "@oxc-solid-js/compiler",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Port of babel-jsx-dom-expressions to oxc",
   "keywords": [
     "N-API",

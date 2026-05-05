@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2f8bb672-4317-401c-9e81-a59abe9b07e4" name="Changes" comment="Try to fix weird build error">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.claude/worktrees/dazzling-rubin-777932" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -130,6 +129,7 @@
       <workItem from="1777692137847" duration="104000" />
       <workItem from="1777692310664" duration="19640000" />
       <workItem from="1777768155023" duration="25000" />
+      <workItem from="1777859443842" duration="9000" />
     </task>
     <task id="LOCAL-00001" summary="Fixes">
       <option name="closed" value="true" />
